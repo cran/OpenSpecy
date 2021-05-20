@@ -16,10 +16,13 @@ library(DT)
 # Name keys for human readable column names ----
 load("data/namekey.RData")
 
-citation <- paste0("W. Cowger, Z. Steinmetz, A. Gray, H. Hapich, C. Rochman, ",
-                   "J. Lynch, S. Primpke, K. Munno, H. De Frond, O. Herodotou. ",
-                   "2020. Open Specy v", packageVersion("OpenSpecy"),
-                   ". www.openspecy.org")
+version <- paste0("Open Specy v", packageVersion("OpenSpecy"))
+citation <- paste(
+  "Cowger W, Steinmetz Z, Gray A, Munno K, Lynch J, Hapich H, Primpke S, De",
+  "Frond H, Rochman C, Herodotou O (2021). “Microplastic Spectral",
+  "Classification Needs an Open Source Community: Open Specy to the Rescue!”",
+  "Analytical Chemistry. https://doi.org/10.1021/acs.analchem.1c00123."
+)
 
 # Functions ----
 labelMandatory <- function(label) {
@@ -84,10 +87,20 @@ appCSS <-
 
 containerfunction <- function(...) {
   div(
-    style = "padding:8rem",
+    style = "padding:5rem",
     div(class = "jumbotron jumbotron-fluid",
         style = "border:solid #f7f7f9;background-color:rgba(0, 0, 0, 0.5)",
         align = "justify", ... ))
+}
+
+plotcontainerfunction <- function(...) {
+  div(
+    #style = "padding:0.1rem",
+    div(class = "jumbotron jumbotron-fluid",
+        style = "border:solid #f7f7f9;background-color:rgba(0, 0, 0, 0.5);padding:1rem",
+        align = "justify",
+        ...)
+    )
 }
 
 columnformat <- function() {
@@ -109,6 +122,7 @@ ui <- fluidPage(
 
   #Script for all pages ----
   shinyjs::useShinyjs(), # Required for any of the shinyjs functions.
+  #extendShinyjs(text = "shinyjs.resetClick = function() { Shiny.onInputChange('.clientValue-plotly_click-A', 'null'); }", functions = "resetClick"),
   inputIp("ipid"),
   inputUserid("fingerprint"),
  # tags$head(uiOutput("name_get")),
@@ -169,7 +183,7 @@ ui <- fluidPage(
                                   The result will be compared to an internal Raman or FTIR spectra library. The strongest 1000 matches along with your
                                   uploaded or processed data will be presented in an interactive plot and table."),
                          a("Detailed Standard Operating Procedure",
-                           onclick = "window.open('https://htmlpreview.github.io/?https://github.com/wincowgerDEV/OpenSpecy/blob/main/vignettes/sop.html', '_blank')",
+                           onclick = "window.open('https://cran.r-project.org/web/packages/OpenSpecy/vignettes/sop.html', '_blank')",
                            class="btn btn-primary btn-lg")
                        ),
 
@@ -233,7 +247,7 @@ ui <- fluidPage(
 
                        containerfunction(
                          h2("Contribute time"),
-                         p(class = "lead", "We are looking for coders, moderators, spectroscopy experts, microplastic researchers, industry, government, and others to join the Open Specy team. Please contact Win at wincowger@gmail.com</h5>"),
+                         p(class = "lead", "We are looking for coders, moderators, spectroscopy experts, microplastic researchers, industry, government, and others to join the Open Specy team. Please contact Win at wincowger@gmail.com"),
                                 div(
                                      a("Community Contribution Guidelines",
                                                 onclick = "window.open('https://docs.google.com/document/d/1SaFgAYKsLbMSYdJClR5s42TyGmPRWihLQcf5zun_yfo/edit?usp=sharing', '_blank')",
@@ -243,7 +257,7 @@ ui <- fluidPage(
 
                       containerfunction(
                         h2("Stay up to date!"),
-                        p(class = "lead", "Follow us on Twitter @OpenSpecy. Email wincowger@gmail.com to be added to the mailing list.")
+                        p(class = "lead", "Follow us on Twitter @OpenSpecy. E-mail wincowger@gmail.com to be added to the mailing list.")
                       ),
 
                       containerfunction(
@@ -253,13 +267,13 @@ ui <- fluidPage(
 
                       containerfunction(
                         h2("Useful Links"),
-                        a(href = "https://simple-plastics.eu/", "Free FTIR Software: siMPle microplastic IR spectral identification software"),
+                        a(href = "https://simple-plastics.eu/", "Free FTIR Software: siMPle microplastic IR spectral identification software", class = "lead"),
                         p(),
-                        a(href = "https://www.thermofisher.com/us/en/home/industrial/spectroscopy-elemental-isotope-analysis/spectroscopy-elemental-isotope-analysis-learning-center/molecular-spectroscopy-information.html", "Free Spectroscopy Learning Academy from ThermoFisher"),
+                        a(href = "https://www.thermofisher.com/us/en/home/industrial/spectroscopy-elemental-isotope-analysis/spectroscopy-elemental-isotope-analysis-learning-center/molecular-spectroscopy-information.html", "Free Spectroscopy Learning Academy from ThermoFisher", class = "lead"),
                         p(),
-                        a(href = "https://micro.magnet.fsu.edu/primer/", "Free Optical Microscopy Learning Resource from Florida State University"),
+                        a(href = "https://micro.magnet.fsu.edu/primer/", "Free Optical Microscopy Learning Resource from Florida State University", class = "lead"),
                         p(),
-                        a(href = "https://www.effemm2.de/spectragryph/index.html", "Free desktop application for spectral analysis and links to reference databases.")
+                        a(href = "https://www.effemm2.de/spectragryph/index.html", "Free desktop application for spectral analysis and links to reference databases.", class = "lead")
                       ),
 
                        containerfunction(
@@ -275,9 +289,10 @@ ui <- fluidPage(
 
               #Upload File Tab ----
               tabPanel("Upload File", value = "tab1",
-                       titlePanel(h4("Upload, View and Share Spectra")),
+                       titlePanel(h4("Upload, View, and Share Spectra")),
+                       br(),
                        fluidRow(
-                         column(2, style = columnformat(),
+                         column(3, style = columnformat(),
                                 tags$label("Choose .csv (preferred), .asp, .jdx, .spc, .spa, or .0 File"),
 
                                 prettySwitch("share_decision",
@@ -444,8 +459,8 @@ ui <- fluidPage(
                                 ),
 
 
-                         column(10,
-                                plotlyOutput('MyPlot'),
+                         column(9,
+                                plotcontainerfunction(h4(id = "placeholder1", "Upload some data to get started..."), plotlyOutput('MyPlot')),
                                 style = bodyformat()
 
                          ),
@@ -454,7 +469,8 @@ ui <- fluidPage(
                        fluidRow(
                          column(3),
                          column(6, align = "center",
-                                tags$p("Citation: ", citation)
+                                tags$p(citation),
+                                tags$p(version)
                                 ),
                          column(3)
 
@@ -463,9 +479,10 @@ ui <- fluidPage(
 
               #Preprocess Spectrum Tab ----
               tabPanel("Preprocess Spectrum", value = "tab2",
-                       titlePanel(tags$h4("Smooth, Baseline Correct, and Download Processed Spectra")),
+                       titlePanel(h4("Smooth, Baseline Correct, and Download Processed Spectra")),
+                       br(),
                        fluidRow(
-                           column(2, style = columnformat(),
+                           column(3, style = columnformat(),
                                 fluidRow(
                                   column(12,
                                   downloadButton('downloadData', 'Download (recommended)'),
@@ -516,7 +533,7 @@ ui <- fluidPage(
                                   bsPopover(
                                     id = "baseline_decision",
                                     title = "Baseline Correction Help",
-                                    content = c("This baseline correction routine utilizes the imodpolyfit procedure to itteratively find the baseline of the spectrum using a polynomial fit to the entire region of the spectra."),
+                                    content = c("This baseline correction routine has two options for baseline correction, 1) the polynomial imodpolyfit procedure to itteratively find the baseline of the spectrum using a polynomial fit to the entire region of the spectra. 2) manual lines can be drawn using the line tool on the plot and the correct button will use the lines to subtract the baseline."),
                                     placement = "bottom",
                                     trigger = "hover"
                                         )
@@ -524,7 +541,16 @@ ui <- fluidPage(
                                     ),
                                 column(2,
                                        dropdownButton(inputId = "baseline_tools",
+                                                      selectInput(inputId = "baseline_selection", label = "Technique", choices = c("Polynomial", "Manual")),
                                                       sliderInput("baseline", "Baseline Correction Polynomial", min = 1, max = 20, value = 8),
+                                                      fluidRow(
+                                                        column(6,
+                                                               actionButton("go", "Correct With Trace"),
+                                                               ),
+                                                        column(6,
+                                                               actionButton("reset", "Reset"),
+                                                               )
+                                                      ),
                                                       icon = icon("gear"),
                                                       size = "xs",
                                                       status = "success",
@@ -580,8 +606,9 @@ ui <- fluidPage(
                             ),
 
 
-                         column(10,
-                                plotlyOutput('MyPlotB'),
+                         column(9,
+                                plotcontainerfunction(h4(id = "placeholder2", "Upload some data to get started..."), plotlyOutput('MyPlotB')),
+                                #verbatimTextOutput(outputId = "text"),
                                 style = bodyformat()
 
                          )),
@@ -589,18 +616,22 @@ ui <- fluidPage(
                        fluidRow(
                          column(3),
                          column(6, align = "center",
-                                tags$p("Citation: ", citation)
+                                tags$p(citation),
+                                tags$p(version)
                          ),
                          column(3)
 
                        )),
 
               #Match Spectrum Tab ----
-              tabPanel("Match Spectrum",value = "tab3",
-                       titlePanel(tags$h4("Identify Spectrum Using the Reference Library")),
+              tabPanel("Identify Spectrum",value = "tab3",
+                       titlePanel(h4("Identify Spectrum Using the Reference Library")),
+                       br(),
                        fluidRow(
-                         column(2, style = columnformat(),
-                                radioButtons("Spectra", "Spectrum Type",
+                         column(3, style = columnformat(),
+                                fluidRow(
+                                  column(4,
+                                          radioButtons("Spectra", "Type",
                                              c("Raman" = "raman",
                                                "FTIR" = "ftir")),
                                 bsPopover(
@@ -609,8 +640,9 @@ ui <- fluidPage(
                                   content = c("This selection will determine whether the FTIR or Raman matching library is used. Choose the spectrum type that was uploaded."),
                                   placement = "bottom",
                                   trigger = "hover"
-                                ),
-                                radioButtons("Data", "Spectrum to Analyze",
+                                )),
+                                column(4,
+                                       radioButtons("Data", "Analysis",
                                             c("Processed" = "processed",
                                               "Uploaded" = "uploaded"
                                             )),
@@ -621,36 +653,41 @@ ui <- fluidPage(
                                   placement = "bottom",
                                   trigger = "hover"
                                 ),
-                                radioButtons("Library", "Region to Match",
-                                            c("Full Spectrum" = "full",
-                                              "Peaks Only" = "peaks")),
+                                       ),
+                                column(4,
+                                       radioButtons("Library", "Region",
+                                            c("Full" = "full",
+                                              "Peaks" = "peaks")),
                                 bsPopover(
                                   id = "Library",
-                                  title = "Region To Match Help",
-                                  content = c("This selection will determine whether the the library you are matching to consists of the full spectrum or only spectrum peaks."),
+                                  title = "Region to Match Help",
+                                  content = c("This selection will determine whether the library you are matching to consists of the full spectrum or only spectrum peaks."),
                                   placement = "bottom",
                                   trigger = "hover"
                                 )
 
+                                    )
+                                ),
+                                fluidRow(style = "padding:1rem",
+                                   DT::dataTableOutput('event')
+                                )
                          ),
 
-                         column(7,
-
-                                plotlyOutput('MyPlotC'),
-                                DT::dataTableOutput('eventmetadata'),
+                         column(9,
+                                plotcontainerfunction(h4(id = "placeholder3", "Upload some data to get started..."), plotlyOutput('MyPlotC'),
+                                                      DT::dataTableOutput('eventmetadata')),
                                 style = bodyformat()
 
+                         )
                          ),
-                         column(3, DT::dataTableOutput('event'),
-                                style = bodyformat()
-                                )),
 
 
                        hr(),
                        fluidRow(
                          column(3),
                          column(6, align = "center",
-                                tags$p("Citation: ", citation)
+                                tags$p(citation),
+                                tags$p(version)
                          ),
                          column(3)
 
@@ -688,7 +725,8 @@ ui <- fluidPage(
                        fluidRow(
                          column(3),
                          column(6, align = "center",
-                                tags$p("Citation: ", citation)
+                                tags$p(citation),
+                                tags$p(version)
                          ),
                          column(3)
 

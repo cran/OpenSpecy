@@ -43,7 +43,7 @@
 #' \code{\link[hyperSpec]{read.jdx}()}; \code{\link[hyperSpec]{read.spc}()};
 #' \code{\link[hexView]{readRaw}()}; \code{\link{share_spec}()}
 #'
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #' @export
 read_text <- function(file = ".", cols = NULL, method = "read.csv",
                       share = NULL, id = paste(digest(Sys.info()),
@@ -53,15 +53,22 @@ read_text <- function(file = ".", cols = NULL, method = "read.csv",
   df <- do.call(method, list(file, ...)) %>%
     data.frame()
 
-  if (all(grepl("^X[0-9]*", names(df)))) stop("missing header; ",
+  if (all(grepl("^X[0-9]*", names(df)))) stop("missing header: ",
                                               "use 'header = FALSE' or an ",
                                               "alternative read method")
 
   # Try to guess column names
   if (is.null(cols)) {
-    cols <- c(names(df)[grep("(wav*)|(^V1$)", ignore.case = T, names(df))][1L],
-              names(df)[grep("(transmit*)|(reflect*)|(abs*)|(intens*)|(^V2$)",
-                             ignore.case = T, names(df))][1L])
+    if (all(grepl("^V[0-9]*", names(df)))) {
+      cols <- 1:2
+      warning("missing header: guessing 'wavenumber' and 'intensity' data ",
+              "from the first two columns; use 'cols' to supply user-defined ",
+              "columns")
+    } else {
+      cols <- c(names(df)[grep("(wav*)", ignore.case = T, names(df))][1L],
+                names(df)[grep("(transmit*)|(reflect*)|(abs*)|(intens*)",
+                               ignore.case = T, names(df))][1L])
+    }
   }
   if (any(is.na(cols))) stop("undefined columns selected; columns should be ",
                              "named 'wavenumber' and 'intensity'")
@@ -111,12 +118,11 @@ read_spa <- function(file = ".", share = NULL, id = paste(digest(Sys.info()),
 
   trb <- file.path(file) %>% file(open = "rb", ...)
 
-  hdr <- trb %>% readLines(n = 10, skipNul = TRUE)
+  seek(trb, 576, origin = "start")
+  spr <- readBin(trb, "numeric", n = 2, size = 4)
 
-  res <- hdr[grepl("Resolution", hdr, useBytes = T)]
-
-  start <- strsplit(res, " ")[[1]][5] %>% as.numeric()
-  end <- strsplit(res, " ")[[1]][7] %>% as.numeric()
+  if (!all(spr >= 0 & spr <= 15000 & spr[1] > spr[2]))
+    stop("unknown spectral range")
 
   # Read the start offset
   seek(trb, 386, origin = "start")
@@ -136,7 +142,7 @@ read_spa <- function(file = ".", share = NULL, id = paste(digest(Sys.info()),
 
   close(trb)
 
-  df <- data.frame(wavenumber = seq(end, start, length = length(floatData)),
+  df <- data.frame(wavenumber = seq(spr[1], spr[2], length = length(floatData)),
                    intensity = floatData)
 
   if (!is.null(share)) share_spec(df, file = file, share = share, id = id)
@@ -224,7 +230,7 @@ read_0 <- function(file = ".", share = NULL, id = paste(digest(Sys.info()),
 
   ## Get number of data points for each spectra data block
   NPT0 <- readRaw(file, offset = npt0, nbytes = 12, human = "int", size = 4)[[5]][2]
-  NPT1 <- readRaw(file, offset=npt1, nbytes=4, human = "int", size = 4)[[5]][1]
+  NPT1 <- readRaw(file, offset = npt1, nbytes = 4, human = "int", size = 4)[[5]][1]
   fxv <- readRaw(file, offset = fx, nbytes = 16, human = "real", size = 8)[[5]][1] ## fxv = frequency of first point
   lxv <- readRaw(file, offset = lx, nbytes = 16, human = "real", size = 8)[[5]][1] ## lxv = frequency of last point
   x <- rev(seq(lxv, fxv, (fxv - lxv) / (NPT1 - 1)))
