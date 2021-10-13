@@ -50,6 +50,23 @@ load_data <- function() {
   donations <- fread("data/donations.csv")
   testdata <- raman_hdpe
 
+  goals <- tibble(
+    Status =      c("Revolutionizing", 
+                    "Thriving", 
+                    "Maintaining", 
+                    "Supporting", 
+                    "Saving"),
+    Description = c("A paid team that is pushing Open Specy closer to the ultimate goal of 100% accurate spectral identification and deep spectral diagnostics with a single click",
+                    "A single paid staff person working to update and build the community and the tool",
+                    "Maintenance costs and minor ad-hoc updates and bug fixes",
+                    "Keeping the app online and essential maintenance",
+                    "Long term storage only"),
+    'Annual Need'  = c(">100,000$",
+                       "10,000–100,000$",
+                       "1,000–10,000$",
+                       "100–1,000$",
+                       "<100$")
+  )
   # Check if spectral library is present and load
   test_lib <- class(tryCatch(check_lib(path = conf$library_path),
                              warning = function(w) {w}))
@@ -89,7 +106,30 @@ server <- shinyServer(function(input, output, session) {
 #      q("no")
 #    })
 #  }
-
+  
+  #brks <- seq(5, 320000, 1000)
+  clrs <- colorRampPalette(c("white", "#6baed6"))(5 + 1)
+  
+  output$event_goals <- DT::renderDataTable({
+    datatable(goals,
+              options = list(
+                             dom = "t",
+                             ordering = FALSE,
+                             paging = FALSE,
+                             searching = FALSE
+                             #sDom  = '<"top">lrt<"bottom">ip',
+                             
+                             ),
+              caption = "Progress (current staus selected)",
+              style = "bootstrap",
+              class = 'row-border',
+              escape = FALSE,
+              rownames = FALSE,
+              #formatStyle(c("Annual Need"), backgroundColor = styleColorBar(color = clrs)),
+              selection = list(mode = "single", selected = c(2)))
+  })
+  
+  #Reading Data and Startup ----
   # Sharing ID
   id <- reactive({
     if (!is.null(input$fingerprint)) {
@@ -145,7 +185,7 @@ server <- shinyServer(function(input, output, session) {
         text = paste0("Uploaded data type is not currently supported; please
                       check tooltips and 'About' tab for details."),
         type = "warning")
-      stop()
+      return(NULL)
       }
 
     if (input$share_decision & curl::has_internet()) {
@@ -180,11 +220,12 @@ server <- shinyServer(function(input, output, session) {
         show_alert(
           title = "Something went wrong :-(",
           text = paste0("R says: '", rout$message, "'. ",
-                        "If you uploaded a .csv file, make sure that the ",
-                        "columns are named 'wavenumber' and 'intensity'."),
+                        "If you uploaded a text/csv file, make sure that the ",
+                        "columns are numeric and named 'wavenumber' and ",
+                        "'intensity'."),
           type = "error"
         )
-        stop()
+        return(NULL)
       } else {
         rout
       }
@@ -193,12 +234,15 @@ server <- shinyServer(function(input, output, session) {
 
   # Corrects spectral intensity units using the user specified correction
   data <- reactive({
+    req(preprocessed_data())
     adj_intens(preprocessed_data(), type = input$intensity_corr)
     })
 
   #Preprocess Spectra ----
   # All cleaning of the data happens here. Smoothing and Baseline removing
   baseline_data <- reactive({
+    req(data())
+
     testdata <- data() %>% dplyr::filter(wavenumber > input$MinRange &
                                            wavenumber < input$MaxRange)
     test <-  nrow(testdata) < 3
@@ -240,7 +284,7 @@ server <- shinyServer(function(input, output, session) {
              paper_bgcolor = 'rgba(0,0,0,0.5)',
              font = list(color = '#FFFFFF'))
   })
-  
+
   output$MyPlotB <- renderPlotly({
     plot_ly(type = 'scatter', mode = 'lines', source = "B") %>%
       add_trace(data = baseline_data(), x = ~wavenumber, y = ~intensity,
@@ -259,15 +303,15 @@ server <- shinyServer(function(input, output, session) {
              font = list(color = '#FFFFFF')) %>%
       config(modeBarButtonsToAdd = list("drawopenpath", "eraseshape" ))
   })
-  
+
 trace <- reactiveValues(data = NULL)
-  
+
 observeEvent(input$go, {
   pathinfo <- event_data(event = "plotly_relayout", source = "B")$shapes$path
   if (is.null(pathinfo)) trace$data <- NULL
   else {
    nodes <- unlist(strsplit(
-             gsub("(L)|(M)", "_", 
+             gsub("(L)|(M)", "_",
                   paste(unlist(pathinfo), collapse = "")),
              "(,)|(_)"))
    nodes = nodes[-1]
@@ -283,10 +327,10 @@ observeEvent(input$reset, {
   trace$data <- NULL
 })
 
-#  output$text <- renderPrint({ 
+#  output$text <- renderPrint({
 #   trace$data#
 #    })
-  
+
   # Choose which spectrum to use
   DataR <- reactive({
     if(input$Data == "uploaded") {
@@ -497,7 +541,7 @@ observeEvent(input$reset, {
       show("reset")
     }
   })
-  
+
   observe({
     if (input$range_decision) {
       show("range_tools")
@@ -505,9 +549,9 @@ observeEvent(input$reset, {
       hide("range_tools")
     }
   })
-  
+
   observe({
-    if (is.null(data())) {
+    if (is.null(preprocessed_data())) {
       show("placeholder1")
       show("placeholder2")
       show("placeholder3")
@@ -517,7 +561,7 @@ observeEvent(input$reset, {
       hide("placeholder3")
     }
   })
-  
+
   #This toggles the hidden metadata input layers.
   observeEvent(input$share_meta, {
     sapply(names(namekey)[c(1:24,32)], function(x) toggle(x))
@@ -546,7 +590,7 @@ observeEvent(input$go, {
       }
   }
 })
-  
+
   observe({
     req(input$file1)
     req(input$share_decision)
