@@ -1,15 +1,16 @@
 # Open Specy
 
-Analyze, Process, Identify, and Share, Raman and (FT)IR Spectra
+Analyze, Process, Identify, and Share Raman and (FT)IR Spectra
 
 <!-- badges: start -->
 [![CRAN version](https://www.r-pkg.org/badges/version/OpenSpecy)](https://CRAN.R-project.org/package=OpenSpecy) 
 [![Project Status](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![R-CMD-check](https://github.com/wincowgerDEV/OpenSpecy/workflows/R-CMD-check/badge.svg)](https://github.com/wincowgerDEV/OpenSpecy/actions)
+[![R-CMD-check](https://github.com/wincowgerDEV/OpenSpecy-package/workflows/R-CMD-check/badge.svg)](https://github.com/wincowgerDEV/OpenSpecy-package/actions)
 [![License: CC BY 4.0](https://img.shields.io/badge/license-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 [![DOI](https://img.shields.io/badge/DOI-10.1021/acs.analchem.1c00123-blue.svg)](https://doi.org/10.1021/acs.analchem.1c00123)
 [![Website](https://img.shields.io/badge/web-openspecy.org-white)](https://wincowger.shinyapps.io/OpenSpecy/)
 [![Twitter Follow](https://img.shields.io/twitter/follow/OpenSpecy)](https://twitter.com/OpenSpecy)
+[![Gitter](https://badges.gitter.im/Open-Specy/community.svg)](https://gitter.im/Open-Specy/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 <!-- badges: end -->
 
 Raman and (FT)IR spectral analysis tool for plastic particles and
@@ -23,7 +24,7 @@ with Zhao et al. (2007, doi:
 identifying spectra using an onboard reference library (Cowger et al. 2020, doi: [10.1177/0003702820929064](https://doi.org/10.1177/0003702820929064)).
 Analyzed spectra can be shared with the Open Specy community. A Shiny app is
 available via `run_app()` or online at
-[http://www.openspecy.org](https://wincowger.shinyapps.io/OpenSpecy/).
+[https://openanalysis.org/openspecy/](https://openanalysis.org/openspecy/).
 
 ## Installation
 
@@ -55,7 +56,7 @@ run_app()
 ```
 
 See
-[package vignette](https://htmlpreview.github.io/?https://github.com/wincowgerDEV/OpenSpecy/blob/main/vignettes/sop.html)
+[package vignette](https://htmlpreview.github.io/?https://github.com/wincowgerDEV/OpenSpecy-package/blob/main/vignettes/sop.html)
 for a detailed standard operating procedure.
 
 ## Workflow
@@ -104,5 +105,5 @@ Needs an Open Source Community: Open Specy to the Rescue!”
 [10.1021/acs.analchem.1c00123](https://doi.org/10.1021/acs.analchem.1c00123).
 
 Cowger W, Steinmetz Z (2021). “OpenSpecy: Analyze, Process,
-Identify, and Share, Raman and (FT)IR Spectra.” *R package*, **0.9.3**.
-[https://github.com/wincowgerDEV/OpenSpecy](https://github.com/wincowgerDEV/OpenSpecy).
+Identify, and Share Raman and (FT)IR Spectra.” *R package*, **0.9.5**.
+[https://github.com/wincowgerDEV/OpenSpecy-package](https://github.com/wincowgerDEV/OpenSpecy-package).
