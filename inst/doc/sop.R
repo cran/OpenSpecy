@@ -77,43 +77,41 @@ head(scratch_OpenSpecy) # shows the top wavenumbers and intensities
 ## ---- eval=F------------------------------------------------------------------
 #  hyperspecy <- as_hyperSpec(scratch_OpenSpecy)
 
-## ---- fig.align="center", fig.width=6-----------------------------------------
+## ---- fig.align="center", fig.width=5-----------------------------------------
 plot(scratch_OpenSpecy) # quick and efficient
 
-## ---- fig.align="center", out.width="98%"-------------------------------------
+## ---- fig.align="center", out.width="100%"------------------------------------
 # This will min-max normalize your data even if it isn't already but are not
 # changing your underlying data
 plotly_spec(scratch_OpenSpecy, json_example)
 
-## ---- fig.align="center", out.width="98%"-------------------------------------
-heatmap_spec(spectral_map,
-             z = spectral_map$metadata$x) # will show more advanced example 
-                                          # later in tutorial
+## ---- eval=F------------------------------------------------------------------
+#  heatmap_spec(spectral_map,
+#               z = spectral_map$metadata$x)
 
-## ---- fig.align="center", out.width="98%"-------------------------------------
+## ---- fig.align="center", out.width="100%"------------------------------------
 interactive_plot(spectral_map, select = 100, z = spectral_map$metadata$x)
 
-## -----------------------------------------------------------------------------
+## ---- fig.align="center", fig.width=5-----------------------------------------
 c_spec(list(asp_example, ps_example), range = "common", res = 5) |> 
   plot()
 
 ## -----------------------------------------------------------------------------
 # Extract the 150th spectrum. 
-filter_spec(spectral_map, 150) |>
-  plot()
+filter_spec(spectral_map, 150)
 
 ## -----------------------------------------------------------------------------
 # Extract the spectrum with column name "8_5". 
-filter_spec(spectral_map, "8_5") |>
-  plot()
+filter_spec(spectral_map, "8_5") |> 
+  print()
 
-## -----------------------------------------------------------------------------
+## ---- fig.align="center", fig.width=5-----------------------------------------
 # Extract the spectra with a logical argument based on metadata
 filter_spec(spectral_map, spectral_map$metadata$y == 1) |>
   plot()
 
-## -----------------------------------------------------------------------------
-sample_spec(spectral_map,size = 10) |>
+## ---- fig.align="center", fig.width=5-----------------------------------------
+sample_spec(spectral_map, size = 5) |>
   plot()
 
 ## -----------------------------------------------------------------------------
@@ -142,11 +140,11 @@ summary(raman_hdpe)
 ## ----eval=FALSE---------------------------------------------------------------
 #  plotly_spec(raman_hdpe, processed)
 
-## -----------------------------------------------------------------------------
-sig_noise(processed, metric = "run_sig_over_noise") > 
-  sig_noise(raman_hdpe, metric = "run_sig_over_noise")
+## ---- eval=F------------------------------------------------------------------
+#  sig_noise(processed, metric = "run_sig_over_noise") >
+#    sig_noise(raman_hdpe, metric = "run_sig_over_noise")
 
-## -----------------------------------------------------------------------------
+## ---- out.width="100%"--------------------------------------------------------
 spectral_map_p <- spectral_map |>
   process_spec(flatten_range = T)
 
@@ -154,7 +152,7 @@ spectral_map_p$metadata$sig_noise <- sig_noise(spectral_map_p)
 
 heatmap_spec(spectral_map_p, sn = spectral_map_p$metadata$sig_noise, min_sn = 5)
 
-## ---- fig.align="center", fig.width=6-----------------------------------------
+## ---- fig.align="center", out.width="100%"------------------------------------
 trans_raman_hdpe <- raman_hdpe
 trans_raman_hdpe$spectra <- 2 - trans_raman_hdpe$spectra^2
     
@@ -177,7 +175,7 @@ conform_spec(spectral_map, range = ps_example$wavenumber, res = 10,
              type = "roll") |> 
   summary()
 
-## ----smooth_intens, fig.cap = "Sample `raman_hdpe` spectrum with different smoothing polynomials.", fig.width=6, fig.align="center"----
+## ----smooth_intens, fig.cap = "Sample `raman_hdpe` spectrum with different smoothing polynomials.", fig.width=5, fig.align="center"----
 none <- make_rel(raman_hdpe)
 p1 <- smooth_intens(raman_hdpe, polynomial = 1, derivative = 0, abs = F)
 p4 <- smooth_intens(raman_hdpe, polynomial = 4, derivative = 0, abs = F)
@@ -185,7 +183,7 @@ p4 <- smooth_intens(raman_hdpe, polynomial = 4, derivative = 0, abs = F)
 c_spec(list(none, p1, p4)) |> 
   plot()
 
-## ----compare_derivative, fig.cap = "Sample `raman_hdpe` spectrum with different derivatives.", fig.width=6, fig.align="center"----
+## ----compare_derivative, fig.cap = "Sample `raman_hdpe` spectrum with different derivatives.", fig.width=5, fig.align="center"----
 none <- make_rel(raman_hdpe)
 d1 <- smooth_intens(raman_hdpe, derivative = 1, abs = T)
 d2 <- smooth_intens(raman_hdpe, derivative = 2, abs = T)
@@ -193,7 +191,7 @@ d2 <- smooth_intens(raman_hdpe, derivative = 2, abs = T)
 c_spec(list(none, d1, d2)) |> 
   plot()
 
-## ----subtr_baseline, fig.cap = "Sample `raman_hdpe` spectrum with different degrees of background subtraction (Cowger et al., 2020).", fig.width=6, fig.align="center"----
+## ----subtr_baseline, fig.cap = "Sample `raman_hdpe` spectrum with different degrees of background subtraction (Cowger et al., 2020).", fig.width=5, fig.align="center"----
 alternative_baseline <- smooth_intens(raman_hdpe, polynomial = 1, window = 51,
                                       derivative = 0, abs = F, make_rel = F) |>
   flatten_range(min = 2700, max = 3200, make_rel = F)
@@ -206,7 +204,7 @@ d8 <- subtr_baseline(raman_hdpe, degree = 8)
 c_spec(list(none, d2, d8)) |> 
   plot()
 
-## ----restrict_range, fig.cap = "Sample `raman_hdpe` spectrum with different degrees of range restriction.", fig.width=6, fig.align="center"----
+## ----restrict_range, fig.cap = "Sample `raman_hdpe` spectrum with different degrees of range restriction.", fig.width=5, fig.align="center"----
 none <- make_rel(raman_hdpe)
 r1 <- restrict_range(raman_hdpe, min = 1000, max = 2000)
 r2 <- restrict_range(raman_hdpe, min = c(1000, 1800), max = c(1200, 2000))
@@ -217,7 +215,7 @@ compare_ranges <- c_spec(list(none, r1, r2), range = "common")
 
 plot(compare_ranges)
 
-## ----flatten_range, fig.cap = "Sample `raman_hdpe` spectrum with different degrees of background subtraction (Cowger et al., 2020).", fig.width=6, fig.align="center"----
+## ----flatten_range, fig.cap = "Sample `raman_hdpe` spectrum with different degrees of background subtraction (Cowger et al., 2020).", fig.width=5, fig.align="center"----
 single <- filter_spec(spectral_map, 120) # Function to filter spectra by index
                                          # number or name or a logical vector. 
 none <- make_rel(single)
@@ -228,11 +226,8 @@ compare_flats <- c_spec(list(none, f1, f2))
 
 plot(compare_flats)
 
-## ----make_rel, fig.cap = "Sample `raman_hdpe` spectrum with one being relative and the other untransformed.", fig.width=6, fig.align="center"----
-none <- raman_hdpe
+## ----make_rel, fig.cap = "Sample `raman_hdpe` spectrum with one being relative and the other untransformed."----
 relative <- make_rel(raman_hdpe)
-plot(none)
-lines(relative)
 
 ## ---- eval=F------------------------------------------------------------------
 #  get_lib(type = "derivative")
