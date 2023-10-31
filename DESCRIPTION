@@ -1,8 +1,8 @@
 Package: OpenSpecy
 Type: Package
 Title: Analyze, Process, Identify, and Share Raman and (FT)IR Spectra
-Version: 1.0.4
-Date: 2023-10-01
+Version: 1.0.5
+Date: 2023-10-31
 Authors@R: c(person("Win", "Cowger", role = c("cre", "aut", "dtc"),
       email = "wincowger@gmail.com",
       comment = c(ORCID = "0000-0001-9226-3104")),
@@ -80,7 +80,7 @@ Suggests: knitr, rmarkdown, testthat (>= 3.1.9), config, qs, shinyjs,
 RoxygenNote: 7.2.3
 Config/testthat/edition: 3
 NeedsCompilation: no
-Packaged: 2023-10-01 18:45:16 UTC; zacharias
+Packaged: 2023-10-31 10:27:29 UTC; steinmetz-z
 Author: Win Cowger [cre, aut, dtc] (<https://orcid.org/0000-0001-9226-3104>),
   Zacharias Steinmetz [aut] (<https://orcid.org/0000-0001-6675-5033>),
   Nick Leong [aut] (<https://orcid.org/0009-0008-3313-4132>),
@@ -111,4 +111,4 @@ Author: Win Cowger [cre, aut, dtc] (<https://orcid.org/0000-0001-9226-3104>),
   Possibility Lab [fnd]
 Maintainer: Win Cowger <wincowger@gmail.com>
 Repository: CRAN
-Date/Publication: 2023-10-02 17:50:02 UTC
+Date/Publication: 2023-10-31 15:40:02 UTC
