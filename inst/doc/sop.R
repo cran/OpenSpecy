@@ -1,4 +1,4 @@
-## ---- include = FALSE---------------------------------------------------------
+## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -10,13 +10,13 @@ data.table::setDTthreads(2)
 ## ----setup--------------------------------------------------------------------
 library(OpenSpecy)
 
-## ---- eval=FALSE--------------------------------------------------------------
+## ----eval=FALSE---------------------------------------------------------------
 #  run_app()
 
-## ---- eval=FALSE--------------------------------------------------------------
+## ----eval=FALSE---------------------------------------------------------------
 #  read_any("path/to/your/data")
 
-## ---- eval=FALSE--------------------------------------------------------------
+## ----eval=FALSE---------------------------------------------------------------
 #  read_text(".csv")
 #  read_asp(".asp")
 #  read_opus(".0")
@@ -70,29 +70,29 @@ summary(scratch_OpenSpecy) # summarizes the contents of the spectra
 ## -----------------------------------------------------------------------------
 head(scratch_OpenSpecy) # shows the top wavenumbers and intensities
 
-## ---- eval=F------------------------------------------------------------------
+## ----eval=F-------------------------------------------------------------------
 #  write_spec(scratch_OpenSpecy, "test_scratch_OpenSpecy.yml", digits = 5)
 #  write_spec(scratch_OpenSpecy, "test_scratch_OpenSpecy.json", digits = 5)
 
-## ---- eval=F------------------------------------------------------------------
+## ----eval=F-------------------------------------------------------------------
 #  hyperspecy <- as_hyperSpec(scratch_OpenSpecy)
 
-## ---- fig.align="center", fig.width=5-----------------------------------------
+## ----fig.align="center", fig.width=5------------------------------------------
 plot(scratch_OpenSpecy) # quick and efficient
 
-## ---- fig.align="center", out.width="100%"------------------------------------
+## ----fig.align="center", out.width="100%"-------------------------------------
 # This will min-max normalize your data even if it isn't already but are not
 # changing your underlying data
 plotly_spec(scratch_OpenSpecy, json_example)
 
-## ---- eval=F------------------------------------------------------------------
+## ----eval=F-------------------------------------------------------------------
 #  heatmap_spec(spectral_map,
 #               z = spectral_map$metadata$x)
 
-## ---- fig.align="center", out.width="100%"------------------------------------
+## ----fig.align="center", out.width="100%"-------------------------------------
 interactive_plot(spectral_map, select = 100, z = spectral_map$metadata$x)
 
-## ---- fig.align="center", fig.width=5-----------------------------------------
+## ----fig.align="center", fig.width=5------------------------------------------
 c_spec(list(asp_example, ps_example), range = "common", res = 5) |> 
   plot()
 
@@ -105,12 +105,12 @@ filter_spec(spectral_map, 150)
 filter_spec(spectral_map, "8_5") |> 
   print()
 
-## ---- fig.align="center", fig.width=5-----------------------------------------
+## ----fig.align="center", fig.width=5------------------------------------------
 # Extract the spectra with a logical argument based on metadata
 filter_spec(spectral_map, spectral_map$metadata$y == 1) |>
   plot()
 
-## ---- fig.align="center", fig.width=5-----------------------------------------
+## ----fig.align="center", fig.width=5------------------------------------------
 sample_spec(spectral_map, size = 5) |>
   plot()
 
@@ -140,11 +140,11 @@ summary(raman_hdpe)
 ## ----eval=FALSE---------------------------------------------------------------
 #  plotly_spec(raman_hdpe, processed)
 
-## ---- eval=F------------------------------------------------------------------
+## ----eval=F-------------------------------------------------------------------
 #  sig_noise(processed, metric = "run_sig_over_noise") >
 #    sig_noise(raman_hdpe, metric = "run_sig_over_noise")
 
-## ---- out.width="100%"--------------------------------------------------------
+## ----out.width="100%"---------------------------------------------------------
 spectral_map_p <- spectral_map |>
   process_spec(flatten_range = T)
 
@@ -152,7 +152,7 @@ spectral_map_p$metadata$sig_noise <- sig_noise(spectral_map_p)
 
 heatmap_spec(spectral_map_p, sn = spectral_map_p$metadata$sig_noise, min_sn = 5)
 
-## ---- fig.align="center", out.width="100%"------------------------------------
+## ----fig.align="center", out.width="100%"-------------------------------------
 trans_raman_hdpe <- raman_hdpe
 trans_raman_hdpe$spectra <- 2 - trans_raman_hdpe$spectra^2
     
@@ -229,13 +229,13 @@ plot(compare_flats)
 ## ----make_rel, fig.cap = "Sample `raman_hdpe` spectrum with one being relative and the other untransformed."----
 relative <- make_rel(raman_hdpe)
 
-## ---- eval=F------------------------------------------------------------------
+## ----eval=F-------------------------------------------------------------------
 #  get_lib(type = "derivative")
 
-## ---- eval=F------------------------------------------------------------------
+## ----eval=F-------------------------------------------------------------------
 #  lib <- load_lib(type = "derivative")
 
-## ---- eval = F----------------------------------------------------------------
+## ----eval = F-----------------------------------------------------------------
 #  data("test_lib")
 #  data("raman_hdpe")
 #  
@@ -261,7 +261,7 @@ relative <- make_rel(raman_hdpe)
 ## ----eval=FALSE---------------------------------------------------------------
 #  plotly_spec(processed, filter_spec(test_lib, logic = matches[[1,"library_id"]]))
 
-## ---- eval = F----------------------------------------------------------------
+## ----eval = F-----------------------------------------------------------------
 #  data("test_lib")
 #  test_map <- read_any(read_extdata("CA_tiny_map.zip"))
 #  
@@ -284,7 +284,7 @@ relative <- make_rel(raman_hdpe)
 #  # Collapses spectra to their median for each particle
 #  test_collapsed <- collapse_spec(id_map)
 
-## ---- eval = F----------------------------------------------------------------
+## ----eval = F-----------------------------------------------------------------
 #  data("test_lib")
 #  test_map <- read_any(read_extdata("CA_tiny_map.zip"))
 #  

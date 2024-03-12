@@ -1,8 +1,8 @@
 Package: OpenSpecy
 Type: Package
 Title: Analyze, Process, Identify, and Share Raman and (FT)IR Spectra
-Version: 1.0.6
-Date: 2023-11-25
+Version: 1.0.7
+Date: 2024-03-11
 Authors@R: c(person("Win", "Cowger", role = c("cre", "aut", "dtc"),
       email = "wincowger@gmail.com",
       comment = c(ORCID = "0000-0001-9226-3104")),
@@ -13,6 +13,8 @@ Authors@R: c(person("Win", "Cowger", role = c("cre", "aut", "dtc"),
       comment = c(ORCID = "0009-0008-3313-4132")),
     person("Andrea", "Faltynkova", role = c("aut", "dtc"),
       comment = c(ORCID = "0000-0003-2523-3137")),
+    person("Hannah", "Sherrod", role = c("aut"),
+      comment = c(ORCID = "0009-0001-0497-8693")),
     person("Andrew B", "Gray", role = c("ctb"),
       comment = c(ORCID = "0000-0003-2252-7367")), 
     person("Hannah", "Hapich", role = c("ctb"),
@@ -73,18 +75,19 @@ LazyData: true
 VignetteBuilder: knitr
 Depends: R (>= 4.1.0)
 Imports: methods, data.table, jsonlite, yaml, osfr, caTools, hyperSpec,
-        imager, plotly, digest, signal, glmnet, shiny
+        mmand, plotly, digest, signal, glmnet, shiny
 Suggests: knitr, rmarkdown, testthat (>= 3.1.9), config, qs, shinyjs,
         shinyWidgets, bs4Dash, dplyr, ggplot2, DT, curl, aws.s3,
         mongolite, loggit
 RoxygenNote: 7.2.3
 Config/testthat/edition: 3
 NeedsCompilation: no
-Packaged: 2023-11-25 12:55:52 UTC; zacharias
+Packaged: 2024-03-11 23:03:21 UTC; hannahsherrod
 Author: Win Cowger [cre, aut, dtc] (<https://orcid.org/0000-0001-9226-3104>),
   Zacharias Steinmetz [aut] (<https://orcid.org/0000-0001-6675-5033>),
   Nick Leong [aut] (<https://orcid.org/0009-0008-3313-4132>),
   Andrea Faltynkova [aut, dtc] (<https://orcid.org/0000-0003-2523-3137>),
+  Hannah Sherrod [aut] (<https://orcid.org/0009-0001-0497-8693>),
   Andrew B Gray [ctb] (<https://orcid.org/0000-0003-2252-7367>),
   Hannah Hapich [ctb] (<https://orcid.org/0000-0003-0000-6632>),
   Jennifer Lynch [ctb, dtc] (<https://orcid.org/0000-0003-3572-8782>),
@@ -111,4 +114,4 @@ Author: Win Cowger [cre, aut, dtc] (<https://orcid.org/0000-0001-9226-3104>),
   Possibility Lab [fnd]
 Maintainer: Win Cowger <wincowger@gmail.com>
 Repository: CRAN
-Date/Publication: 2023-11-25 23:50:02 UTC
+Date/Publication: 2024-03-12 00:20:03 UTC
