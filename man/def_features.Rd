@@ -19,7 +19,19 @@ def_features(x, ...)
 
 \method{def_features}{default}(x, ...)
 
-\method{def_features}{OpenSpecy}(x, features, shape_kernel = c(3, 3), ...)
+\method{def_features}{OpenSpecy}(
+  x,
+  features,
+  shape_kernel = c(3, 3),
+  shape_type = "box",
+  close = F,
+  close_kernel = c(4, 4),
+  close_type = "box",
+  img = NULL,
+  bottom_left = NULL,
+  top_right = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{an \code{OpenSpecy} object}
@@ -33,11 +45,49 @@ types present in the spectra.}
 connecting features, c(3,3) is typically used but larger numbers will smooth
 connections between particles more.}
 
+\item{shape_type}{character, options are for the shape used to find connections c("box", "disc", "diamond")}
+
+\item{close}{logical, whether a closing should be performed using the shape kernel before
+estimating components.}
+
+\item{close_kernel}{width and height of the area to close if using the close option.}
+
+\item{close_type}{character, options are for the shape used to find connections c("box", "disc", "diamond")}
+
+\item{img}{a file location where a visual image is that corresponds to the spectral image.}
+
+\item{bottom_left}{a two value vector specifying the x,y location in image pixels where
+the bottom left of the spectral map begins. y values are from the top down while
+x values are left to right.}
+
+\item{top_right}{a two value vector specifying the x,y location in the visual image
+pixels where the top right of the spectral map extent is. y values are from
+the top down while x values are left to right.}
+
 \item{\ldots}{additional arguments passed to subfunctions.}
 }
 \value{
 An \code{OpenSpecy} object appended with metadata about the features or
-collapsed for the features.
+collapsed for the features. All units are in pixels. Metadata described below.
+\describe{
+\item{\code{x}}{x coordinate of the pixel or centroid if collapsed}
+\item{\code{y}}{y coordinate of the pixel or centroid if collapsed}
+\item{\code{feature_id}}{unique identifier of each feature}
+\item{\code{area}}{area in pixels of the feature}
+\item{\code{perimeter}}{perimeter of the convex hull of the feature}
+\item{\code{feret_min}}{feret_max divided by the area}
+\item{\code{feret_max}}{largest dimension of the convex hull of the feature}
+\item{\code{convex_hull_area}}{area of the convex hull}
+\item{\code{centroid_x}}{mean x coordinate of the feature}
+\item{\code{centroid_y}}{mean y coordinate of the feature}
+\item{\code{first_x}}{first x coordinate of the feature}
+\item{\code{first_y}}{first y coordinate of the feature}
+\item{\code{rand_x}}{random x coordinate from the feature}
+\item{\code{rand_y}}{random y coordinate from the feature}
+\item{\code{r}}{if using visual imagery overlay, the red band value at that location}
+\item{\code{g}}{if using visual imagery overlay, the green band value at that location}
+\item{\code{b}}{if using visual imagery overlay, the blue band value at that location}
+}
 }
 \description{
 Functions for analyzing features, like particles, fragments, or fibers, in

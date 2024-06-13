@@ -93,7 +93,7 @@ plotly_spec(scratch_OpenSpecy, json_example)
 interactive_plot(spectral_map, select = 100, z = spectral_map$metadata$x)
 
 ## ----fig.align="center", fig.width=5------------------------------------------
-c_spec(list(asp_example, ps_example), range = "common", res = 5) |> 
+c_spec(list(asp_example, ps_example), range = "common", res = 8) |> 
   plot()
 
 ## -----------------------------------------------------------------------------
@@ -120,7 +120,7 @@ processed <- process_spec(raman_hdpe,
                           adj_intens = FALSE,
                           adj_intens_args = list(type = "none"),
                           conform_spec = TRUE,
-                          conform_spec_args = list(range = NULL, res = 5,
+                          conform_spec_args = list(range = NULL, res = 8,
                                                    type = "interp"),
                           restrict_range = FALSE,
                           restrict_range_args = list(min = 0, max = 6000),
@@ -162,7 +162,7 @@ rev_trans_raman_hdpe <- trans_raman_hdpe |>
 plotly_spec(trans_raman_hdpe, rev_trans_raman_hdpe)
 
 ## -----------------------------------------------------------------------------
-conform_spec(raman_hdpe) |> # default convert res to 5 wavenumbers.
+conform_spec(raman_hdpe, res = 8) |> # convert res to 8 wavenumbers.
   summary()
 
 # Force one spectrum to have the exact same wavenumbers as another

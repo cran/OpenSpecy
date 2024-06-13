@@ -1,8 +1,8 @@
 Package: OpenSpecy
 Type: Package
 Title: Analyze, Process, Identify, and Share Raman and (FT)IR Spectra
-Version: 1.0.8
-Date: 2024-03-14
+Version: 1.1.0
+Date: 2024-06-13
 Authors@R: c(person("Win", "Cowger", role = c("cre", "aut", "dtc"),
       email = "wincowger@gmail.com",
       comment = c(ORCID = "0000-0001-9226-3104")),
@@ -66,7 +66,7 @@ Description: Raman and (FT)IR spectral analysis tool for plastic particles and
     <doi:10.1177/0003702820929064>) using match_spec(). A Shiny app is available
     via run_app() or online at <https://openanalysis.org/openspecy/>.
 URL: https://github.com/wincowgerDEV/OpenSpecy-package/,
-        http://wincowger.com/OpenSpecy-package/
+        https://wincowger.com/OpenSpecy-package/
 BugReports: https://github.com/wincowgerDEV/OpenSpecy-package/issues/
 License: CC BY 4.0
 Encoding: UTF-8
@@ -75,14 +75,14 @@ LazyData: true
 VignetteBuilder: knitr
 Depends: R (>= 4.1.0)
 Imports: methods, data.table, jsonlite, yaml, osfr, caTools, hyperSpec,
-        mmand, plotly, digest, signal, glmnet, shiny
-Suggests: knitr, rmarkdown, testthat (>= 3.1.9), config, qs, shinyjs,
-        shinyWidgets, bs4Dash, dplyr, ggplot2, DT, curl, aws.s3,
-        mongolite, loggit
-RoxygenNote: 7.2.3
+        mmand, plotly, digest, signal, glmnet, jpeg, shiny
+Suggests: knitr, rmarkdown, testthat (>= 3.1.9), aws.s3, loggit,
+        config, shinyjs, shinyWidgets, bs4Dash, dplyr, DT, mongolite,
+        ggplot2
+RoxygenNote: 7.3.1
 Config/testthat/edition: 3
 NeedsCompilation: no
-Packaged: 2024-03-14 18:28:30 UTC; hannahsherrod
+Packaged: 2024-06-13 22:34:11 UTC; hannahsherrod
 Author: Win Cowger [cre, aut, dtc] (<https://orcid.org/0000-0001-9226-3104>),
   Zacharias Steinmetz [aut] (<https://orcid.org/0000-0001-6675-5033>),
   Nick Leong [aut] (<https://orcid.org/0009-0008-3313-4132>),
@@ -114,4 +114,4 @@ Author: Win Cowger [cre, aut, dtc] (<https://orcid.org/0000-0001-9226-3104>),
   Possibility Lab [fnd]
 Maintainer: Win Cowger <wincowger@gmail.com>
 Repository: CRAN
-Date/Publication: 2024-03-14 23:00:03 UTC
+Date/Publication: 2024-06-13 23:50:02 UTC

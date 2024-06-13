@@ -3,7 +3,6 @@
 \docType{package}
 \name{OpenSpecy-package}
 \alias{OpenSpecy-package}
-\alias{_PACKAGE}
 \alias{openspecy}
 \title{OpenSpecy: Analyze, Process, Identify, and Share Raman and (FT)IR Spectra}
 \description{
@@ -47,7 +46,7 @@ Background Subtraction Algorithm for Biomedical Raman Spectroscopy.”
 Useful links:
 \itemize{
   \item \url{https://github.com/wincowgerDEV/OpenSpecy-package/}
-  \item \url{http://wincowger.com/OpenSpecy-package/}
+  \item \url{https://wincowger.com/OpenSpecy-package/}
   \item Report bugs at \url{https://github.com/wincowgerDEV/OpenSpecy-package/issues/}
 }
 

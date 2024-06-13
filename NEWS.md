@@ -1,8 +1,23 @@
+# OpenSpecy 1.1.0
+
+## Minor Improvements
+
+- updated links
+
+
+# OpenSpecy 1.0.9
+
+## Minor Improvements
+
+- more closing and flexibility options
+
+
 # OpenSpecy 1.0.8
 
 ## Minor Improvements
 
 - updated `manage_na`, `spec_res`, `read_any` for easier flow with the app
+
 
 # OpenSpecy 1.0.7
 
@@ -10,6 +25,7 @@
 
 - Modified `manage_na.R`
 - Added to NAMESPACE
+
 
 # OpenSpecy 1.0.6
 
