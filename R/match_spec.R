@@ -341,6 +341,7 @@ ai_classify.OpenSpecy <- function(x, library, fill = NULL, ...) {
                   min(library$model$lambda),
                   type = "response") |>
     as.data.table()
+  
   names(pred)[1:3] <- c("x", "y", "z")
   pred$x <- as.integer(pred$x)
   pred$y <- as.integer(pred$y)
@@ -388,6 +389,7 @@ fill_spec.OpenSpecy <- function(x, fill, ...) {
              function(x) {
                unlist(fill$spectra)
              })]
+  
   test[match(x$wavenumber, fill$wavenumber),] <- x$spectra
 
   x$spectra <- test

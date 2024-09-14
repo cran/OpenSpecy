@@ -1,8 +1,8 @@
 Package: OpenSpecy
 Type: Package
 Title: Analyze, Process, Identify, and Share Raman and (FT)IR Spectra
-Version: 1.1.0
-Date: 2024-06-13
+Version: 1.2.0
+Date: 2024-09-13
 Authors@R: c(person("Win", "Cowger", role = c("cre", "aut", "dtc"),
       email = "wincowger@gmail.com",
       comment = c(ORCID = "0000-0001-9226-3104")),
@@ -74,15 +74,14 @@ LazyLoad: true
 LazyData: true
 VignetteBuilder: knitr
 Depends: R (>= 4.1.0)
-Imports: methods, data.table, jsonlite, yaml, osfr, caTools, hyperSpec,
+Imports: methods, data.table, jsonlite, yaml, caTools, hyperSpec,
         mmand, plotly, digest, signal, glmnet, jpeg, shiny
-Suggests: knitr, rmarkdown, testthat (>= 3.1.9), aws.s3, loggit,
-        config, shinyjs, shinyWidgets, bs4Dash, dplyr, DT, mongolite,
-        ggplot2
+Suggests: knitr, rmarkdown, testthat (>= 3.1.9), shinyjs, shinyWidgets,
+        bs4Dash, dplyr, DT, ggplot2
 RoxygenNote: 7.3.1
 Config/testthat/edition: 3
 NeedsCompilation: no
-Packaged: 2024-06-13 22:34:11 UTC; hannahsherrod
+Packaged: 2024-09-14 00:57:21 UTC; winco
 Author: Win Cowger [cre, aut, dtc] (<https://orcid.org/0000-0001-9226-3104>),
   Zacharias Steinmetz [aut] (<https://orcid.org/0000-0001-6675-5033>),
   Nick Leong [aut] (<https://orcid.org/0009-0008-3313-4132>),
@@ -114,4 +113,4 @@ Author: Win Cowger [cre, aut, dtc] (<https://orcid.org/0000-0001-9226-3104>),
   Possibility Lab [fnd]
 Maintainer: Win Cowger <wincowger@gmail.com>
 Repository: CRAN
-Date/Publication: 2024-06-13 23:50:02 UTC
+Date/Publication: 2024-09-14 02:20:02 UTC

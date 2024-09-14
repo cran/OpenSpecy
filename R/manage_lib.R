@@ -20,23 +20,11 @@
 #' \code{rm_lib()} removes the libraries from your computer.
 #'
 #' @param type library type to check/retrieve; defaults to
-#' \code{c("derivative", "nobaseline", "raw", "mediod", "model")} which reads
+#' \code{c("derivative", "nobaseline", "raw", "medoid", "model")} which reads
 #' everything.
-#' @param node the OSF node to be retrieved; should be \code{"x7dpz"} unless you
-#' maintain your own OSF node with spectral libraries.
 #' @param path where to save or look for local library files; defaults to
 #' \code{"system"} pointing to
 #' \code{system.file("extdata", package = "OpenSpecy")}.
-#' @param conflicts determines what happens when a file with the same name
-#' exists at the specified destination. Can be one of the following (see
-#' \code{\link[osfr]{osf_download}()} for details):
-#' \describe{
-#'   \item{"error"}{throw an error and abort the file transfer operation.}
-#'   \item{"skip"}{skip the conflicting file(s) and continue transferring the
-#'   remaining files.}
-#'   \item{"overwrite" (default)}{ replace the existing file with the
-#'   transferred copy.}
-#' }
 #' @param condition determines if \code{check_lib()} should warn
 #' (\code{"warning"}, the default) or throw and error (\code{"error"}).
 #' @param \ldots further arguments passed to \code{\link[osfr]{osf_download}()}.
@@ -182,29 +170,51 @@ check_lib <- function(type = c("derivative", "nobaseline", "raw", "mediod",
 
 #' @rdname manage_lib
 #'
-#' @importFrom utils read.csv
-#' @importFrom osfr osf_retrieve_node osf_ls_files osf_download
+#' @importFrom utils read.csv download.file sessionInfo
 #'
 #' @export
-get_lib <- function(type = c("derivative", "nobaseline", "raw", "mediod",
+get_lib <- function(type = c("derivative", 
+                             "nobaseline", 
+                             "raw", 
+                             "medoid",
                              "model"),
-                    path = "system", node = "x7dpz", conflicts = "overwrite",
+                    path = "system",
                     ...) {
-  lp <- ifelse(path == "system",
-               system.file("extdata", package = "OpenSpecy"),
-               path)
-
-  osf <- osf_retrieve_node(node) |>
-    osf_ls_files(pattern = ".rds", n_max = Inf)
-
-  message("Fetching Open Specy reference libraries from OSF ...")
-    osf |> subset(grepl(
-      paste0("(", paste(type, collapse = "|"), ").rds"),
-      osf$name)) |>
-      osf_download(path = lp, conflicts = conflicts, progress = TRUE, ...)
-
-  message("Use 'load_lib()' to load the library")
+    
+    lp <- ifelse(path == "system",
+                 system.file("extdata", package = "OpenSpecy"),
+                 path)
+    
+    message("Fetching Open Specy reference libraries from OSF ...")
+    
+    if("derivative" %in% type){
+        message("Fetching derivative library...")
+        download.file("https://osf.io/download/2qbkt/", destfile = paste0(lp, "\\derivative.rds"), mode = "wb")
+    }
+    
+    if("nobaseline" %in% type){
+        message("Fetching nobaseline library...")
+        download.file("https://osf.io/download/jy7zk/", destfile = paste0(lp, "\\nobaseline.rds"), mode = "wb")
+    }
+    
+    if("medoid" %in% type){
+        message("Fetching mediod library...")
+        download.file("https://osf.io/download/yzscg/", destfile = paste0(lp, "\\mediod.rds"), mode = "wb")
+    }
+    
+    if("model" %in% type){
+        message("Fetching model library...")
+        download.file("https://osf.io/download/v2yr3/", destfile = paste0(lp, "\\model.rds"), mode = "wb")
+    }
+    
+    if("raw" %in% type){
+        message("Fetching raw library...")
+        download.file("https://osf.io/download/kzv3n/", destfile = paste0(lp, "\\raw.rds"), mode = "wb")
+    }
+    
+    message("Use 'load_lib()' to load the library")
 }
+
 
 #' @rdname manage_lib
 #'

@@ -5,7 +5,7 @@
 #' @description
 #' Functions for reading spectral data from external file types.
 #' Currently supported reading formats are .csv and other text files, .asp,
-#' .spa, .spc, and .jdx.
+#' .spa, .spc, .xyz, and .jdx.
 #' Additionally, .0 (OPUS) and .dat (ENVI) files are supported via
 #' \code{\link{read_opus}()} and \code{\link{read_envi}()}, respectively.
 #' \code{\link{read_zip}()} takes any of the files listed above.
@@ -18,8 +18,6 @@
 #' @param method submethod to be used for reading text files; defaults to
 #' \code{\link[data.table]{fread}()} but \code{\link[utils]{read.csv}()} works
 #' as well.
-#' @param share defaults to \code{NULL}; needed to share spectra with the
-#' Open Specy community; see \code{\link{share_spec}()} for details.
 #' @param metadata a named list of the metadata; see
 #' \code{\link{as_OpenSpecy}()} for details.
 #' @param \ldots further arguments passed to the submethods.
@@ -56,7 +54,6 @@
 #' @importFrom data.table data.table as.data.table fread transpose
 #' @export
 read_text <- function(file, colnames = NULL, method = "fread",
-                      share = NULL,
                       metadata = list(
                         file_name = basename(file),
                         user_name = NULL,
@@ -90,7 +87,23 @@ read_text <- function(file, colnames = NULL, method = "fread",
   if (all(grepl("^X[0-9]*", names(dt))))
     stop("missing header: use 'header = FALSE' or an alternative read method",
          call. = F)
-  if(sum(grepl("^[0-9]{1,}$",colnames(dt))) > 4) {
+  #This is for the siMPle csv format. 
+  if(sum(c("WaveNumber", "Raw spectrum", "1st derivative", "2nd derivative") %in% names(dt)) > 2){
+      dt <- as.data.table(lapply(dt, as.numeric))
+      wavenumbers <- dt[["WaveNumber"]]
+      spectra <- dt[,-"WaveNumber"]
+      os <- as_OpenSpecy(x = as.numeric(wavenumbers), spectra = spectra,
+                         metadata = metadata)
+  }
+  else if(grepl("\\.xyz$", basename(file), ignore.case = T)){
+      wavenumbers <- as.numeric(dt[1, ])[-c(1:2)]
+      # Remove the first row
+      xy <- dt[-1,1:2]
+      colnames(xy) <- c("x", "y")
+      dt <- transpose(dt[-1, -c(1:2)])
+      os <- as_OpenSpecy(x = wavenumbers, spectra = dt, metadata = xy)
+  }
+  else if(sum(grepl("^[0-9]{1,}$",colnames(dt))) > 4) {
     wavenumbers <- colnames(dt)[grepl("^[0-9]{1,}$",colnames(dt))]
     spectra <- transpose(dt[,wavenumbers, with = FALSE])
     metadata_names <- colnames(dt)[!grepl("^[0-9]{1,}$",colnames(dt))]
@@ -104,15 +117,13 @@ read_text <- function(file, colnames = NULL, method = "fread",
                        session_id = T)
   }
 
-  if (!is.null(share)) share_spec(os, file = file, share = share)
-
   return(os)
 }
 
 #' @rdname read_ext
 #'
 #' @export
-read_asp <- function(file, share = NULL,
+read_asp <- function(file,
                      metadata = list(
                        file_name = basename(file),
                        user_name = NULL,
@@ -154,8 +165,6 @@ read_asp <- function(file, share = NULL,
   os <- as_OpenSpecy(x, data.table(intensity = y), metadata = metadata,
                      session_id = T)
 
-  if (!is.null(share)) share_spec(os, file = file, share = share)
-
   return(os)
 }
 
@@ -163,7 +172,7 @@ read_asp <- function(file, share = NULL,
 #'
 #' @importFrom utils read.table
 #' @export
-read_spa <- function(file, share = NULL,
+read_spa <- function(file, 
                      metadata = list(
                        file_name = basename(file),
                        user_name = NULL,
@@ -227,8 +236,6 @@ read_spa <- function(file, share = NULL,
   os <- as_OpenSpecy(x, data.table(intensity = y), metadata = metadata,
                      session_id = T)
 
-  if (!is.null(share)) share_spec(os, file = file, share = share)
-
   return(os)
 }
 
@@ -237,7 +244,7 @@ read_spa <- function(file, share = NULL,
 #'
 #' @importFrom hyperSpec read.spc
 #' @export
-read_spc <- function(file, share = NULL,
+read_spc <- function(file,
                      metadata = list(
                        file_name = basename(file),
                        user_name = NULL,
@@ -274,8 +281,6 @@ read_spc <- function(file, share = NULL,
   os <- as_OpenSpecy(x, data.table(intensity = y), metadata = metadata,
                      session_id = T)
 
-  if (!is.null(share)) share_spec(os, file = file, share = share)
-
   return(os)
 }
 
@@ -283,7 +288,7 @@ read_spc <- function(file, share = NULL,
 #'
 #' @importFrom hyperSpec read.jdx
 #' @export
-read_jdx <- function(file, share = NULL,
+read_jdx <- function(file, 
                      metadata = list(
                        file_name = basename(file),
                        user_name = NULL,
@@ -329,7 +334,6 @@ read_jdx <- function(file, share = NULL,
   os <- as_OpenSpecy(x, data.table(intensity = y), metadata = df_metadata,
                      session_id = T)
 
-  if (!is.null(share)) share_spec(os, file = file, share = share)
 
   return(os)
 }

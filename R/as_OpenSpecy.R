@@ -148,6 +148,8 @@
 #' \code{\link{read_spec}()} for reading \code{OpenSpecy} objects.
 #'
 #' @importFrom data.table as.data.table
+#' @importFrom digest digest
+#' @importFrom utils sessionInfo
 #' @export
 as_OpenSpecy <- function(x, ...) {
   UseMethod("as_OpenSpecy")

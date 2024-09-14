@@ -13,7 +13,6 @@ read_text(
   file,
   colnames = NULL,
   method = "fread",
-  share = NULL,
   metadata = list(file_name = basename(file), user_name = NULL, contact_info = NULL,
     organization = NULL, citation = NULL, spectrum_type = NULL, spectrum_identity = NULL,
     material_form = NULL, material_phase = NULL, material_producer = NULL,
@@ -30,7 +29,6 @@ read_text(
 
 read_asp(
   file,
-  share = NULL,
   metadata = list(file_name = basename(file), user_name = NULL, contact_info = NULL,
     organization = NULL, citation = NULL, spectrum_type = NULL, spectrum_identity = NULL,
     material_form = NULL, material_phase = NULL, material_producer = NULL,
@@ -47,7 +45,6 @@ read_asp(
 
 read_spa(
   file,
-  share = NULL,
   metadata = list(file_name = basename(file), user_name = NULL, contact_info = NULL,
     organization = NULL, citation = NULL, spectrum_type = NULL, spectrum_identity = NULL,
     material_form = NULL, material_phase = NULL, material_producer = NULL,
@@ -64,7 +61,6 @@ read_spa(
 
 read_spc(
   file,
-  share = NULL,
   metadata = list(file_name = basename(file), user_name = NULL, contact_info = NULL,
     organization = NULL, citation = NULL, spectrum_type = NULL, spectrum_identity = NULL,
     material_form = NULL, material_phase = NULL, material_producer = NULL,
@@ -81,7 +77,6 @@ read_spc(
 
 read_jdx(
   file,
-  share = NULL,
   metadata = list(file_name = basename(file), user_name = NULL, contact_info = NULL,
     organization = NULL, citation = NULL, spectrum_type = NULL, spectrum_identity = NULL,
     material_form = NULL, material_phase = NULL, material_producer = NULL,
@@ -108,9 +103,6 @@ names for the wavenumber and intensity; if \code{NULL} columns are guessed.}
 \code{\link[data.table]{fread}()} but \code{\link[utils]{read.csv}()} works
 as well.}
 
-\item{share}{defaults to \code{NULL}; needed to share spectra with the
-Open Specy community; see \code{\link{share_spec}()} for details.}
-
 \item{metadata}{a named list of the metadata; see
 \code{\link{as_OpenSpecy}()} for details.}
 
@@ -123,7 +115,7 @@ named \code{"wavenumber"} and \code{"intensity"}.
 \description{
 Functions for reading spectral data from external file types.
 Currently supported reading formats are .csv and other text files, .asp,
-.spa, .spc, and .jdx.
+.spa, .spc, .xyz, and .jdx.
 Additionally, .0 (OPUS) and .dat (ENVI) files are supported via
 \code{\link{read_opus}()} and \code{\link{read_envi}()}, respectively.
 \code{\link{read_zip}()} takes any of the files listed above.

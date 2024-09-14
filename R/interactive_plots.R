@@ -38,6 +38,8 @@
 #' `"Portland"`, `"Rainbow"`, `"RdBu"`, `"Reds"`, `"Viridis"`, `"YlGnBu"`,
 #' `"YlOrRd"`.
 #' @param showlegend whether to show the legend passed to
+#' @param make_rel logical, whether to make the spectra relative or use the raw values
+#' @param type specification for plot type either interactive or static
 #' \code{\link[plotly]{plot_ly}()}.
 #' @param \ldots further arguments passed to \code{\link[plotly]{plot_ly}()}.
 #'
@@ -62,6 +64,8 @@
 #'
 #' @importFrom plotly plot_ly add_trace add_markers subplot layout
 #' @importFrom data.table melt
+#' @importFrom graphics image
+#' @importFrom grDevices heat.colors
 #'
 #' @export
 plotly_spec <- function(x, ...) {
@@ -87,8 +91,9 @@ plotly_spec.OpenSpecy <- function(x,
                                   plot_bgcolor = 'rgba(17, 0, 73, 0)',
                                   paper_bgcolor = 'rgb(0, 0, 0)',
                                   showlegend = FALSE,
+                                  make_rel = TRUE,
                                   ...) {
-  x <- make_rel(x, na.rm = T)
+  if(make_rel)   x <- make_rel(x, na.rm = T)
   dt <- cbind(wavenumber = x$wavenumber, x$spectra) |>
     melt(
       id.vars = "wavenumber",
@@ -116,7 +121,7 @@ plotly_spec.OpenSpecy <- function(x,
     )
 
   if(!is.null(x2)) {
-    x2 <- make_rel(x2, na.rm = T)
+    if(make_rel) x2 <- make_rel(x2, na.rm = T)
     dt2 <- cbind(wavenumber = x2$wavenumber, x2$spectra) |>
       melt(
         id.vars = "wavenumber",
@@ -170,6 +175,7 @@ heatmap_spec.OpenSpecy <- function(x,
                                    paper_bgcolor = 'rgb(0, 0, 0)',
                                    colorscale = 'Viridis',
                                    showlegend = FALSE,
+                                   type = "interactive",
                                    ...) {
   if(!is.null(z))
     plot_z <- z # default
@@ -189,64 +195,72 @@ heatmap_spec.OpenSpecy <- function(x,
   if(all(is.na(plot_z)))
     plot_z = rep(-88, length.out = length(plot_z))
 
-  p <- plot_ly(...) |>
-    add_trace(
-      x = x$metadata$x,
-      y = x$metadata$y,
-      z = if(!is.numeric(plot_z)) {
-        as.numeric(as.factor(plot_z))
-      } else {
-        plot_z
-      },
-      colorscale = colorscale,
-      type = "heatmap",
-      hoverinfo = 'text',
-      showscale = showlegend,
-      text = ~ paste(
-        "row: ",
-        1:nrow(x$metadata),
-        "<br>x: ",
-        x$metadata$x,
-        ", y: ",
-        x$metadata$y,
-        ", z: ",
-        plot_z,
-        if(!is.null(sn))
-          paste("<br>snr: ", signif(sn, 2))
-        else
-          "",
-        if(!is.null(cor))
-          paste("<br>cor: ", signif(cor, 2))
-        else
-          ""
-      )
-    ) |>
-    layout(
-      xaxis = list(
-        title = 'x',
-        zeroline = F,
-        showgrid = F
-      ),
-      yaxis = list(
-        title = 'y',
-        scaleanchor = "x",
-        scaleratio = 1,
-        zeroline = F,
-        showgrid = F
-      ),
-      plot_bgcolor = plot_bgcolor,
-      paper_bgcolor = paper_bgcolor,
-      showlegend = showlegend,
-      font = font
-    )
-
-  if(!is.null(select)) {
-    p <-
-      p |> add_markers(
-        x = x$metadata$x[select],
-        y = x$metadata$y[select],
-        name = "Selected Spectrum"
-      )
+  if(type == "interactive"){
+      p <- plot_ly(...) |>
+          add_trace(
+              x = x$metadata$x,
+              y = x$metadata$y,
+              z = if(!is.numeric(plot_z)) {
+                  as.numeric(as.factor(plot_z))
+              } else {
+                  plot_z
+              },
+              colorscale = colorscale,
+              type = "heatmap",
+              hoverinfo = 'text',
+              showscale = showlegend,
+              text = ~ paste0(
+                  if(!"file_name" %in% names(x$metadata)) 
+                        paste0("row: ", 1:nrow(x$metadata))
+                  else 
+                        paste0("file name: ", x$metadata$file_name),
+                  "<br>x: ",
+                  x$metadata$x,
+                  ", y: ",
+                  x$metadata$y,
+                  ", z: ",
+                  plot_z,
+                  if(!is.null(sn))
+                      paste0("<br>snr: ", signif(sn, 2))
+                  else
+                      "",
+                  if(!is.null(cor))
+                      paste0("<br>cor: ", signif(cor, 2))
+                  else
+                      ""
+              )
+          ) |>
+          layout(
+              xaxis = list(
+                  title = 'x',
+                  zeroline = F,
+                  showgrid = F
+              ),
+              yaxis = list(
+                  title = 'y',
+                  scaleanchor = "x",
+                  scaleratio = 1,
+                  zeroline = F,
+                  showgrid = F
+              ),
+              plot_bgcolor = plot_bgcolor,
+              paper_bgcolor = paper_bgcolor,
+              showlegend = showlegend,
+              font = font
+          )
+      
+      if(!is.null(select)) {
+          p <-
+              p |> add_markers(
+                  x = x$metadata$x[select],
+                  y = x$metadata$y[select],
+                  name = "Selected Spectrum"
+              )
+      }
+  }
+  if(type == "static"){
+      mat <- matrix(plot_z, nrow = length(unique(x$metadata$x)), ncol = length(unique(x$metadata$y)))
+      return(image(unique(x$metadata$x), unique(x$metadata$y), mat, col = heat.colors(100), main = "Heatmap", xlab = "X-axis", ylab = "Y-axis", asp = 1))
   }
 
   return(p)
