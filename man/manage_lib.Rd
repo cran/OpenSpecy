@@ -8,13 +8,15 @@
 \title{Manage spectral libraries}
 \usage{
 check_lib(
-  type = c("derivative", "nobaseline", "raw", "mediod", "model"),
+  type = c("derivative", "nobaseline", "raw", "medoid_derivative", "medoid_nobaseline",
+    "model_derivative", "model_nobaseline"),
   path = "system",
   condition = "warning"
 )
 
 get_lib(
-  type = c("derivative", "nobaseline", "raw", "medoid", "model"),
+  type = c("derivative", "nobaseline", "raw", "medoid_derivative", "medoid_nobaseline",
+    "model_derivative", "model_nobaseline"),
   path = "system",
   ...
 )
@@ -22,13 +24,14 @@ get_lib(
 load_lib(type, path = "system")
 
 rm_lib(
-  type = c("derivative", "nobaseline", "raw", "mediod", "model"),
+  type = c("derivative", "nobaseline", "raw", "medoid_derivative", "medoid_nobaseline",
+    "model_derivative", "model_nobaseline"),
   path = "system"
 )
 }
 \arguments{
 \item{type}{library type to check/retrieve; defaults to
-\code{c("derivative", "nobaseline", "raw", "medoid", "model")} which reads
+\code{c("derivative", "nobaseline", "raw", "medoid_derivative", "medoid_nobaseline", "model_derivative", "model_nobaseline")} which reads
 everything.}
 
 \item{path}{where to save or look for local library files; defaults to
@@ -162,7 +165,7 @@ of large microplastics (L-MP, 500-5000 µm) in surface waters of the Weser
 estuary and the German North Sea.” \emph{PANGAEA}. \doi{10.1594/PANGAEA.938143}.
 
 “Handbook of Raman Spectra for geology” (2023).
-\url{http://www.geologie-lyon.fr/Raman/}.
+\url{https://www.geologie-lyon.fr/Raman/}.
 
 “Scientific Workgroup for the Analysis of Seized Drugs.” (2023).
 https://swgdrug.org/ir.htm.

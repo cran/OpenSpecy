@@ -1,14 +1,17 @@
 Package: OpenSpecy
 Type: Package
 Title: Analyze, Process, Identify, and Share Raman and (FT)IR Spectra
-Version: 1.2.0
-Date: 2024-09-13
+Version: 1.4.0
+Date: 2024-11-04
 Authors@R: c(person("Win", "Cowger", role = c("cre", "aut", "dtc"),
       email = "wincowger@gmail.com",
       comment = c(ORCID = "0000-0001-9226-3104")),
     person("Zacharias", "Steinmetz", role = c("aut"),
       email = "z.steinmetz@rptu.de",
       comment = c(ORCID = "0000-0001-6675-5033")),
+    person("Hazel", "Vaquero", role = c("aut"),
+      email = "hvaquero98@gmail.com",
+      comment = c(ORCID = "0009-0001-5468-2049")),
     person("Nick", "Leong", role = c("aut"),
       comment = c(ORCID = "0009-0008-3313-4132")),
     person("Andrea", "Faltynkova", role = c("aut", "dtc"),
@@ -81,9 +84,10 @@ Suggests: knitr, rmarkdown, testthat (>= 3.1.9), shinyjs, shinyWidgets,
 RoxygenNote: 7.3.1
 Config/testthat/edition: 3
 NeedsCompilation: no
-Packaged: 2024-09-14 00:57:21 UTC; winco
+Packaged: 2024-11-04 21:54:34 UTC; winco
 Author: Win Cowger [cre, aut, dtc] (<https://orcid.org/0000-0001-9226-3104>),
   Zacharias Steinmetz [aut] (<https://orcid.org/0000-0001-6675-5033>),
+  Hazel Vaquero [aut] (<https://orcid.org/0009-0001-5468-2049>),
   Nick Leong [aut] (<https://orcid.org/0009-0008-3313-4132>),
   Andrea Faltynkova [aut, dtc] (<https://orcid.org/0000-0003-2523-3137>),
   Hannah Sherrod [aut] (<https://orcid.org/0009-0001-0497-8693>),
@@ -113,4 +117,4 @@ Author: Win Cowger [cre, aut, dtc] (<https://orcid.org/0000-0001-9226-3104>),
   Possibility Lab [fnd]
 Maintainer: Win Cowger <wincowger@gmail.com>
 Repository: CRAN
-Date/Publication: 2024-09-14 02:20:02 UTC
+Date/Publication: 2024-11-04 22:40:02 UTC
