@@ -6,7 +6,7 @@
 \alias{openspecy}
 \title{OpenSpecy: Analyze, Process, Identify, and Share Raman and (FT)IR Spectra}
 \description{
-Raman and (FT)IR spectral analysis tool for plastic particles and other environmental samples (Cowger et al. 2021, \doi{10.1021/acs.analchem.1c00123}). With read_any(), Open Specy provides a single function for reading individual, batch, or map spectral data files like .asp, .csv, .jdx, .spc, .spa, .0, and .zip. process_spec() simplifies processing spectra, including smoothing, baseline correction, range restriction and flattening, intensity conversions, wavenumber alignment, and min-max normalization. Spectra can be identified in batch using an onboard reference library (Cowger et al. 2020, \doi{10.1177/0003702820929064}) using match_spec(). A Shiny app is available via run_app() or online at \url{https://openanalysis.org/openspecy/}.
+Raman and (FT)IR spectral analysis tool for plastic particles and other environmental samples (Cowger et al. 2021, \doi{10.1021/acs.analchem.1c00123}). With read_any(), Open Specy provides a single function for reading individual, batch, or map spectral data files like .asp, .csv, .jdx, .spc, .spa, .0, and .zip. process_spec() simplifies processing spectra, including smoothing, baseline correction, range restriction and flattening, intensity conversions, wavenumber alignment, and min-max normalization. Spectra can be identified in batch using an onboard reference library (Cowger et al. 2020, \doi{10.1177/0003702820929064}) using match_spec(). A Shiny app is available via run_app() or online at \url{https://www.openanalysis.org/openspecy/}.
 }
 \references{
 Chabuka BK, Kalivas JH (2020). “Application of a Hybrid Fusion Classification
@@ -46,7 +46,7 @@ Background Subtraction Algorithm for Biomedical Raman Spectroscopy.”
 Useful links:
 \itemize{
   \item \url{https://github.com/wincowgerDEV/OpenSpecy-package/}
-  \item \url{https://wincowger.com/OpenSpecy-package/}
+  \item \url{https://raw.githack.com/wincowgerDEV/OpenSpecy-package/main/docs/index.html}
   \item Report bugs at \url{https://github.com/wincowgerDEV/OpenSpecy-package/issues/}
 }
 

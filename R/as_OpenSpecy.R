@@ -23,6 +23,7 @@
 #' @param colnames names of the wavenumber column and spectra column, makes
 #' assumptions based on column names or placement if \code{NULL}.
 #' @param n number of spectra to generate the spatial coordinate grid with.
+#' @param comma_decimal logical(1) whether commas may represent decimals. 
 #' @param \ldots additional arguments passed to submethods.
 #'
 #' @details
@@ -150,6 +151,7 @@
 #' @importFrom data.table as.data.table
 #' @importFrom digest digest
 #' @importFrom utils sessionInfo
+#' @importFrom stats ave
 #' @export
 as_OpenSpecy <- function(x, ...) {
   UseMethod("as_OpenSpecy")
@@ -271,7 +273,20 @@ as_OpenSpecy.default <- function(x, spectra,
                                  ),
                                  coords = "gen_grid",
                                  session_id = FALSE,
+                                 comma_decimal = FALSE,
                                  ...) {
+    
+    if(comma_decimal){
+        #Check wavenumbers for comma decimal format
+        if(all(grepl("^[0-9]+,[0-9]+$", x))){
+            x <- as.numeric(gsub(",",".", x))
+        }
+        #Check the spectra for comma decimal. 
+        if(all(vapply(spectra, function(x) {
+            all(grepl(pattern = "^[0-9]+,[0-9]+$", x))}, FUN.VALUE = logical(1)))){
+            spectra[] <- lapply(spectra, function(x){as.numeric(gsub(",", ".", x))})
+        }
+    }
   if (!is.numeric(x) || !is.vector(x))
     stop("'x' must be numeric vector", call. = F)
   if (!inherits(spectra, c("data.frame", "matrix")))
@@ -322,7 +337,22 @@ as_OpenSpecy.default <- function(x, spectra,
       stop("inconsistent input for 'metadata'", call. = F)
     }
   }
-
+  
+  if(any(duplicated(names(obj$metadata)))){
+      message("Duplicate column names found, adding a unique numeric ID to the end.")
+      nms <- names(obj$metadata)
+      # Identify all names that are duplicated
+      dups <- duplicated(nms) | duplicated(nms, fromLast = TRUE)
+      # Initialize a vector to hold the counts
+      counts <- rep(NA, length(nms))
+      # For duplicated names, generate sequence numbers starting from 0
+      counts[dups] <- ave(seq_along(nms)[dups], nms[dups], FUN = function(x) seq_along(x) - 0)
+      # Create new names by appending counts to duplicated names
+      new_nms <- nms
+      new_nms[dups] <- paste0(nms[dups], "_", counts[dups] - 1)
+      # Update the names in os$metadata
+      names(obj$metadata) <- new_nms
+  }
   return(obj)
 }
 
@@ -348,9 +378,9 @@ check_OpenSpecy <- function(x) {
     warning("Wavenumber values have NA", call. = F)
   if(!(cs <- is.data.table(x$spectra)))
     warning("Spectra are not of class 'data.table'", call. = F)
-  if(!(csn <- !any(vapply(x$spectra, function(x){all(is.na(x))},
+  if(!(csn <- !any(vapply(x$spectra, function(x){sum(!is.na(x)) < 2},
                           FUN.VALUE = logical(1)))))
-    warning("Some of the spectra have all NA values", call. = F)
+    warning("Some of the spectra have one or fewer non NA values", call. = F)
   if(!(cm <- is.data.table(x$metadata)))
     warning("Metadata are not a 'data.table'", call. = F)
   if(!(cr <- ncol(x$spectra) == nrow(x$metadata)))
@@ -369,8 +399,10 @@ check_OpenSpecy <- function(x) {
        identical(order(x$wavenumber), length(x$wavenumber):1)))
     warning("Wavenumbers should be a continuous sequence for all OpenSpecy ",
             "functions to run smoothly", call. = F)
+  if(!(du <- !any(duplicated(x$wavenumber))))
+        warning("Wavenumbers need to be unqiue values.", call. = F)
 
-  chk <- all(cw, cs, cm, cr, cl, cu, cv, co, csz, csn, cwn, cln, cos)
+  chk <- all(cw, cs, cm, cr, cl, cu, cv, co, csz, csn, cwn, cln, cos, du)
 
   return(chk)
 }

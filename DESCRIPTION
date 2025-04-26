@@ -1,8 +1,8 @@
 Package: OpenSpecy
 Type: Package
 Title: Analyze, Process, Identify, and Share Raman and (FT)IR Spectra
-Version: 1.4.0
-Date: 2024-11-04
+Version: 1.5.3
+Date: 2025-04-26
 Authors@R: c(person("Win", "Cowger", role = c("cre", "aut", "dtc"),
       email = "wincowger@gmail.com",
       comment = c(ORCID = "0000-0001-9226-3104")),
@@ -67,24 +67,24 @@ Description: Raman and (FT)IR spectral analysis tool for plastic particles and
     alignment, and min-max normalization. Spectra can be identified in batch
     using an onboard reference library (Cowger et al. 2020,
     <doi:10.1177/0003702820929064>) using match_spec(). A Shiny app is available
-    via run_app() or online at <https://openanalysis.org/openspecy/>.
+    via run_app() or online at <https://www.openanalysis.org/openspecy/>.
 URL: https://github.com/wincowgerDEV/OpenSpecy-package/,
-        https://wincowger.com/OpenSpecy-package/
+        https://raw.githack.com/wincowgerDEV/OpenSpecy-package/main/docs/index.html
 BugReports: https://github.com/wincowgerDEV/OpenSpecy-package/issues/
 License: CC BY 4.0
 Encoding: UTF-8
 LazyLoad: true
 LazyData: true
 VignetteBuilder: knitr
-Depends: R (>= 4.1.0)
+Depends: R (>= 4.3.0)
 Imports: methods, data.table, jsonlite, yaml, caTools, hyperSpec,
         mmand, plotly, digest, signal, glmnet, jpeg, shiny
 Suggests: knitr, rmarkdown, testthat (>= 3.1.9), shinyjs, shinyWidgets,
         bs4Dash, dplyr, DT, ggplot2
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Config/testthat/edition: 3
 NeedsCompilation: no
-Packaged: 2024-11-04 21:54:34 UTC; winco
+Packaged: 2025-04-26 15:18:11 UTC; winco
 Author: Win Cowger [cre, aut, dtc] (<https://orcid.org/0000-0001-9226-3104>),
   Zacharias Steinmetz [aut] (<https://orcid.org/0000-0001-6675-5033>),
   Hazel Vaquero [aut] (<https://orcid.org/0009-0001-5468-2049>),
@@ -117,4 +117,4 @@ Author: Win Cowger [cre, aut, dtc] (<https://orcid.org/0000-0001-9226-3104>),
   Possibility Lab [fnd]
 Maintainer: Win Cowger <wincowger@gmail.com>
 Repository: CRAN
-Date/Publication: 2024-11-04 22:40:02 UTC
+Date/Publication: 2025-04-26 15:40:02 UTC

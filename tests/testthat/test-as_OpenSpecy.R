@@ -10,6 +10,16 @@ test_that("as_OpenSpecy() handles errors correctly", {
                                          intensity = df$intensity)) |>
     expect_error()
 
+  as_OpenSpecy(df, metadata = list(file_name = "test", 
+                                   file_name = "test", 
+                                   fun_val = "t", 
+                                   check = "c",
+                                   check = "a",
+                                   check = "a")) |>
+      check_OpenSpecy() |>
+      expect_true() |>
+      expect_message() 
+  
   as_OpenSpecy(data.frame(x = df$wavenumber, abs = df$intensity)) |>
     expect_message()
   as_OpenSpecy(data.frame(wav = df$wavenumber, y = df$intensity)) |>
@@ -65,7 +75,7 @@ test_that("check_OpenSpecy() work as expected", {
   check_OpenSpecy(os) |> expect_true()
   check_OpenSpecy(df) |> expect_error() |> expect_warning() |> expect_warning() |> expect_warning() |> expect_warning()
 
-  osv <- osn <- oss <- ost <- osl <- os
+  osna <- osd <- osv <- osn <- oss <- ost <- osl <- os
 
   osv$wavenumber <- list(osv$wavenumber)
   check_OpenSpecy(osv) |> expect_false() |> expect_warning()
@@ -73,6 +83,12 @@ test_that("check_OpenSpecy() work as expected", {
   names(osn) <- 1:3
   check_OpenSpecy(osn) |> expect_error() |> expect_warning() |> expect_warning()|> expect_warning() |> expect_warning()
 
+  osna$spectra$intensity[2:length(osna$spectra$intensity)] <- NA
+  check_OpenSpecy(osna) |> expect_warning() 
+  
+  osna$spectra$intensity <- NA
+  check_OpenSpecy(osna) |> expect_warning()
+  
   oss$wavenumber <- sample(oss$wavenumber)
   check_OpenSpecy(oss) |> expect_false() |> expect_warning()
 
@@ -83,6 +99,12 @@ test_that("check_OpenSpecy() work as expected", {
   osl$spectra <- osl$spectra[-1]
 
   check_OpenSpecy(osl) |> expect_false() |> expect_warning() |> expect_warning()
+  
+  #dup wavenumbers
+  osd$wavenumber <- rep(300, length.out = length(osd$wavenumber))
+
+  check_OpenSpecy(osd) |> expect_false() |> expect_warning() 
+  
 })
 
 test_that("'OpenSpecy' objects are read correctly", {

@@ -25,6 +25,11 @@
 #' @param path where to save or look for local library files; defaults to
 #' \code{"system"} pointing to
 #' \code{system.file("extdata", package = "OpenSpecy")}.
+#' @param mode see \code{?download.file} for details on mode.
+#' @param revision revision number to use for libraries, revision numbers can be found 
+#' at the osf repo (https://osf.io/x7dpz/) by clicking the library then history, 
+#' if NULL defaults to most recent. This allows exact version control. 
+#' @param aws whether to source the files from AWS or OSF, default of FALSE is OSF. 
 #' @param condition determines if \code{check_lib()} should warn
 #' (\code{"warning"}, the default) or throw and error (\code{"error"}).
 #' @param \ldots further arguments passed to \code{\link[osfr]{osf_download}()}.
@@ -135,7 +140,6 @@
 #' estuary and the German North Sea.” *PANGAEA*. \doi{10.1594/PANGAEA.938143}.
 #'
 #' “Handbook of Raman Spectra for geology” (2023).
-#' \url{https://www.geologie-lyon.fr/Raman/}.
 #'
 #' “Scientific Workgroup for the Analysis of Seized Drugs.” (2023).
 #' https://swgdrug.org/ir.htm.
@@ -177,52 +181,118 @@ check_lib <- function(type = c("derivative", "nobaseline", "raw", "medoid_deriva
 get_lib <- function(type = c("derivative", "nobaseline", "raw", "medoid_derivative",
                              "medoid_nobaseline", "model_derivative", "model_nobaseline"),
                     path = "system",
+                    mode = "wb",
+                    revision = NULL,
+                    aws = FALSE,
                     ...) {
     
     lp <- ifelse(path == "system",
                  system.file("extdata", package = "OpenSpecy"),
                  path)
     
+  if (!aws) {
     message("Fetching Open Specy reference libraries from OSF ...")
     
-    if("derivative" %in% type){
-        message("Fetching derivative library...")
-        download.file("https://osf.io/download/2qbkt/", destfile = file.path(lp, "derivative.rds"), mode = "wb")
-    }
+    # Mapping from types to URLs and filenames
+    library_info <- list(
+      derivative = list(
+        url = "https://osf.io/download/2qbkt/",
+        filename = "derivative.rds",
+        msg = "Fetching derivative library..."
+      ),
+      nobaseline = list(
+        url = "https://osf.io/download/jy7zk/",
+        filename = "nobaseline.rds",
+        msg = "Fetching nobaseline library..."
+      ),
+      raw = list(
+        url = "https://osf.io/download/kzv3n/",
+        filename = "raw.rds",
+        msg = "Fetching raw library..."
+      ),
+      medoid_derivative = list(
+        url = "https://osf.io/download/2dmwu/",
+        filename = "medoid_derivative.rds",
+        msg = "Fetching medoid derivative library..."
+      ),
+      medoid_nobaseline = list(
+        url = "https://osf.io/download/8f3sg/",
+        filename = "medoid_nobaseline.rds",
+        msg = "Fetching medoid nobaseline library..."
+      ),
+      model_derivative = list(
+        url = "https://osf.io/download/s5bmh/",
+        filename = "model_derivative.rds",
+        msg = "Fetching model derivative library..."
+      ),
+      model_nobaseline = list(
+        url = "https://osf.io/download/v4abf/",
+        filename = "model_nobaseline.rds",
+        msg = "Fetching model nobaseline library..."
+      )
+    )
     
-    if("nobaseline" %in% type){
-        message("Fetching nobaseline library...")
-        download.file("https://osf.io/download/jy7zk/", destfile = file.path(lp, "nobaseline.rds"), mode = "wb")
-    }
+  } else {
+      
+    message("Fetching Open Specy reference libraries from OSF ...")
     
-    if("medoid_derivative" %in% type){
-        message("Fetching medoid derivative library...")
-        download.file("https://osf.io/download/2dmwu/", destfile = file.path(lp, "medoid_derivative.rds"), mode = "wb")
+    # Mapping from types to URLs and filenames
+    library_info <- list(
+      derivative = list(
+        url = "https://d2jrxerjcsjhs7.cloudfront.net/derivative.rds",
+        filename = "derivative.rds",
+        msg = "Fetching derivative library..."
+      ),
+      nobaseline = list(
+        url = "https://d2jrxerjcsjhs7.cloudfront.net/nobaseline.rds",
+        filename = "nobaseline.rds",
+        msg = "Fetching nobaseline library..."
+      ),
+      medoid_derivative = list(
+        url = "https://d2jrxerjcsjhs7.cloudfront.net/medoid_derivative.rds",
+        filename = "medoid_derivative.rds",
+        msg = "Fetching medoid derivative library..."
+      ),
+      medoid_nobaseline = list(
+        url = "https://d2jrxerjcsjhs7.cloudfront.net/medoid_nobaseline.rds",
+        filename = "medoid_nobaseline.rds",
+        msg = "Fetching medoid nobaseline library..."
+      ),
+      model_derivative = list(
+        url = "https://d2jrxerjcsjhs7.cloudfront.net/model_derivative.rds",
+        filename = "model_derivative.rds",
+        msg = "Fetching model derivative library..."
+      ),
+      model_nobaseline = list(
+        url = "https://d2jrxerjcsjhs7.cloudfront.net/model_nobaseline.rds",
+        filename = "model_nobaseline.rds",
+        msg = "Fetching model nobaseline library..."
+      )
+    )
+  }
+  
+  # Loop over the types requested
+  for (t in type) {
+    if (t %in% names(library_info)) {
+      info <- library_info[[t]]
+      message(info$msg)
+      url <- info$url
+      if (!is.null(revision) & !aws) {
+        url <- paste0(url, "?revision=", revision)
+      }
+      if (!is.null(revision) & aws) {
+          url <- paste0(url, "?versionId=", revision)
+      }
+      destfile <- file.path(lp, info$filename)
+      download.file(url, destfile = destfile, mode = mode, ...)
+    } else {
+      warning("Unknown library type: ", t)
     }
-    
-    if("medoid_nobaseline" %in% type){
-        message("Fetching medoid nobaseline library...")
-        download.file("https://osf.io/download/8f3sg/", destfile = file.path(lp, "medoid_nobaseline.rds"), mode = "wb")
-    }
-    
-    if("model_derivative" %in% type){
-        message("Fetching model derivative library...")
-        download.file("https://osf.io/download/s5bmh/", destfile = file.path(lp, "model_derivative.rds"), mode = "wb")
-    }
-    
-    if("model_nobaseline" %in% type){
-        message("Fetching model nobaseline library...")
-        download.file("https://osf.io/download/v4abf/", destfile = file.path(lp, "model_nobaseline.rds"), mode = "wb")
-    }
-    
-    if("raw" %in% type){
-        message("Fetching raw library...")
-        download.file("https://osf.io/download/kzv3n/", destfile = file.path(lp, "raw.rds"), mode = "wb")
-    }
-    
-    message("Use 'load_lib()' to load the library")
+  }
+  
+  message("Use 'load_lib()' to load the library")
+  
 }
-
 
 #' @rdname manage_lib
 #'
